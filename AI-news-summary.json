@@ -1,0 +1,380 @@
+{
+  "name": "Tech-News-Summary",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        368,
+        0
+      ],
+      "id": "d319fc9b-363a-42d3-b149-949eee7afd5a",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.rss }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        960,
+        0
+      ],
+      "id": "8e6f8189-f471-4502-a1a3-60a8e20bd25c",
+      "name": "RSS Read"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1427caa4-4b44-4b7b-9821-8c19279d915a",
+              "name": "rss",
+              "value": "[  \"https://news.mit.edu/rss/topic/artificial-intelligence2\",\n  \"https://bair.berkeley.edu/blog/feed.xml\",\n  \"https://deepmind.google/blog/rss.xml\",\n  \"https://distill.pub/rss.xml\",\n  \"https://openai.com/news/rss.xml\",\n  \"https://www.technologyreview.com/topic/artificial-intelligence/feed\",\n\"https://www.oceanblogs.org/feed/\",\n\"https://www.geomar.de/en/feed/climate\",\n\"https://www.sciencedaily.com/rss/top/technology.xml\",\n\"https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml\"\n]",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        576,
+        0
+      ],
+      "id": "ecf09acb-22ae-4237-9988-1b7d543c964a",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "rss",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        784,
+        0
+      ],
+      "id": "5f97c6b6-91fb-4888-968c-dedd6f8a7368",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d0b7a921-cee3-495e-86cf-b193bd772ee7",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "a2a783f4-0cb5-47b4-a2fe-e85820df562c",
+              "name": "pubDate",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            },
+            {
+              "id": "776d428e-32aa-4b77-8c11-4fee813eb434",
+              "name": "content",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            },
+            {
+              "id": "451aec78-1f84-44f3-826a-c140b8b49798",
+              "name": "link",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "2d8bb92a-8a0c-4688-8c05-98c60dac5420",
+              "name": "categories",
+              "value": "={{ $json.categories }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1168,
+        0
+      ],
+      "id": "a504ad66-8b39-4653-97e2-bc611b8ed4db",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "78cc7848-3eee-4d86-a163-d08e6d4f6ad3",
+              "leftValue": "={{ $json.pubDate }}",
+              "rightValue": "={{ $today.minus(7, 'days') }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "after"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        1376,
+        0
+      ],
+      "id": "bc94ad01-7f85-4cf2-81d7-09af6c85d592",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1824,
+        0
+      ],
+      "id": "0023d6cc-b563-44f5-82ea-bb83fceba57d",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-3.3-70b-instruct:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        2032,
+        192
+      ],
+      "id": "2f4d77b6-b754-45d0-998d-b4dbbc844916",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "YOUR_OPENROUTER_CREDENTIAL_ID",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# AI Newsletter Curation Agent\n\n## Context\nYou are curating a weekly AI newsletter for a graduate-level AI/ML student in Germany focused on environmental/ecological AI applications. Select 10 most relevant articles from the provided JSON data.\n\n## CRITICAL REQUIREMENT - AI/ML VERIFICATION\n\n**Before selecting ANY article, you MUST verify:**\n\n1. Does the article explicitly mention AI, ML, DL, or specific techniques (neural networks, computer vision, transformers, reinforcement learning, GANs, diffusion models, etc.)?\n2. Can you quote the exact sentence(s) that mention these techniques?\n\n**MANDATORY FOR ENVIRONMENTAL ARTICLES:**\n- You MUST cite the specific sentence from the article proving AI/ML/DL is used\n- If you cannot find explicit mention of AI/ML/DL techniques, you MUST EXCLUDE the article\n- DO NOT INFER that AI is used based on: \"monitoring\", \"sensing\", \"optimization\", \"robotics\" alone\n- Phrases like \"could be used with AI\" or \"has potential for AI\" mean NO AI is currently used - EXCLUDE\n\n**Example of FABRICATION (never do this):**\n- Article: \"Soft robots monitor water quality\"\n- Your false claim: \"The project uses AI to control navigation\"\n- Correct action: Exclude article (no AI mentioned in source)\n\n**Example of CORRECT INCLUSION:**\n- Article: \"The system uses convolutional neural networks to identify species from camera trap images\"\n- Your verification: Article explicitly states CNN usage for species identification\n- Correct action: Include article\n\n## General Rule\nYou are not allowed to invent under any circumstances any facts. Especially do not make up that a certain article uses an AI technique even though it is not specifically mentioned. If AI/ML/DL is not explicitly mentioned in the source material, you must exclude the article.\n\n## Selection Criteria (Weighted Priority)\n\n### TIER 1: Must Include (6-8 articles)\n\n**AI for Environmental/Ecological Applications (4-5 articles)**\n- AI systems addressing: climate change, biodiversity conservation, environmental monitoring, renewable energy optimization, sustainable agriculture, pollution reduction, ecosystem restoration\n- Include critical analysis of AI's environmental footprint and green AI initiatives\n\n**VERIFICATION REQUIREMENTS:**\n- Article explicitly states AI/ML/DL technique used (e.g., \"using convolutional neural networks\", \"trained a random forest model\", \"deployed computer vision\", \"reinforcement learning optimization\")\n- You can quote the exact sentence proving AI/ML involvement\n- The AI technique is central to the work, not speculative future application\n\n**HARD EXCLUDE:**\n- Environmental work with no AI mentioned (sensors, monitoring systems, chemistry, materials science alone)\n- Articles where AI is only mentioned as \"could potentially use\" or \"future work\"\n- Robotics without AI-based control systems explicitly described\n- General environmental technology without ML/DL components\n\n- Prefer: Research papers > Open-source implementations > Commercial applications\n\n**Research Breakthroughs (2-3 articles)**\n- Novel architectures, training methods, or optimization techniques with SOTA results\n- Paradigm-shifting approaches (e.g., new attention mechanisms, scaling laws, efficiency breakthroughs)\n- Published research papers or preprints with code/reproducibility\n- EXCLUDE: Incremental improvements, minor architectural tweaks\n\n### TIER 2: Fill Remaining Slots (2-4 articles)\n\n**Major Model/Tool Releases (1-2 articles)**\n- Significant open-source models (LLMs, vision, multimodal) from research labs\n- Revolutionary frameworks changing AI development workflows\n- EXCLUDE: Point releases (v1.2→v1.3), enterprise APIs, cloud services\n\n**Technical Education (0-2 articles)**\n- Deep-dives into important architectures or techniques\n- Must be exceptionally clear and cover non-trivial concepts\n- Prefer visual explanations and interactive content\n\n**Significant Industry News (0-1 article)**\n- Only landmark events: major policy changes, breakthrough product launches with technical details\n- EXCLUDE: Funding rounds, partnerships, enterprise tooling\n\n## Hard Exclusions\n- Cloud infrastructure (AWS/Azure/GCP services, deployment platforms)\n- Enterprise SaaS, B2B tools, no-code platforms\n- Generic tutorials without novel techniques\n- Consumer apps, gaming, regional market analysis\n- Business strategy or thought leadership pieces\n- Overly niche research without broader applicability  \n- News where AI is not mentioned\n- Environmental technology articles where AI/ML/DL is not explicitly mentioned\n\n## Deduplication Rules\nWhen multiple sources cover the same story, prefer:\n1. Original research institution announcement or arXiv paper\n2. Technical deep-dive blogs with code\n3. Quality tech journalism (avoid press release rewrites)\n\n## Output Requirements\n\nFor each selected article:\n\n1. **URL**: Extract exact URL from JSON `url` field\n\n2. **Title** (max 50 chars): Lead with the specific technique, model, or application name\n   - GOOD: \"Diffusion Models for Climate Forecasting\"\n   - GOOD: \"CNNs Detect Deforestation in Satellite Data\"\n   - GOOD: \"Transformer-Based Species Classification\"\n   - GOOD: \"RL Optimizes Wind Farm Energy Output\"\n   - BAD: \"New AI Breakthrough in Climate Science\"\n   - BAD: \"AI for Climate Forecasting\"\n   - BAD: \"AI for Environmental Monitoring\"\n   \n   **Title Structure Rules:**\n   - Start with: specific technique name (e.g., \"CNNs\", \"Transformers\", \"YOLO\"), model name, or application domain\n   - Never start with: \"AI for\", \"New AI\", \"Researchers Use AI\"\n   - Format: [Technique/Model] + [Action Verb] + [Specific Application]\n\n3. **Summary** (3-4 sentences, ~60-80 words):\n   - Sentence 1: What specific AI/ML technique/model/application?\n   - Sentence 2: Key technical innovation or methodology\n   - Sentence 3: Quantifiable results or real-world environmental impact\n   - Sentence 4: Relevance to AI researcher (novel approach, reproducibility, project inspiration)\n\n4. **AI Verification** (required for environmental articles):\n   - For each environmental article, you must be able to identify the exact sentence from the source that proves AI/ML/DL is used\n   - If you cannot identify such a sentence, DO NOT SELECT the article\n   - This verification is internal - you do not need to include it in the HTML output, but you must perform this check\n\n**Language Guidelines:**\n- Use precise technical terms (CNNs, transformers, RL, GANs, etc.)\n- Include metrics when available (accuracy, efficiency gains, emissions reduced)\n- Avoid: \"game-changing,\" \"revolutionary,\" \"groundbreaking\" (unless truly warranted)\n- Write for technical audience; assume ML fundamentals knowledge\n- Do not write any introductory paragraph\n- Do not use any $$...$$ formatting\n- Never fabricate or infer AI usage - only state what is explicitly mentioned in the source\n\n## HTML Output Format\n\n```html\n<ul style=\"list-style-type: none; padding: 0; margin: 0;\">\n<li style=\"margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #e0e0e0;\">\n<strong><a href=\"[EXACT_URL_FROM_JSON]\" style=\"color: #1a73e8; text-decoration: none; font-size: 16px;\">[Technical Title Max 50 Chars]</a></strong><br>\n<span style=\"color: #5f6368; font-size: 14px; line-height: 1.6;\">[3-4 sentence technical summary with specific ML techniques, innovations, and relevance to environmental AI research or methodology. Only mention AI/ML/DL techniques that are explicitly stated in the source article.]</span>\n</li>\n<!-- Repeat for each article -->\n</ul>\n```\n\n## Final Validation Checklist\n- 6-8 articles from Tier 1 priorities\n- Each article has exact JSON URL\n- Each article explicitly mentions the use of AI/ML/DL in the source material\n- For every environmental article, you verified AI/ML/DL is explicitly mentioned (not inferred)\n- All environmental articles involve actual ML/DL techniques stated in the source\n- Research breakthroughs are truly significant\n- No duplicates across sources\n- Summaries are technical and specific\n- Summaries only claim AI/ML/DL usage that is explicitly stated in source\n- Total: 8-10 articles (acceptable to return fewer if quality threshold not met)\n- Output is valid HTML only\n\n## Input Data\nProcess the following JSON data:\n{{JSON.stringify($json.data)}}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        2032,
+        0
+      ],
+      "id": "76909d28-1d1e-41a1-a35a-82d5d20f2e7f",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "fromEmail": "example@domain.com",
+        "toEmail": "example@domain.com",
+        "subject": "=AI-Summary {{ $today.format('dd.LL.yyyy') }}",
+        "html": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2368,
+        0
+      ],
+      "id": "38a7ad78-941b-4a01-9c10-5887ce7b055b",
+      "name": "Send email",
+      "webhookId": "4b1427cd-6f6d-4a26-a328-15111d183579",
+      "credentials": {
+        "smtp": {
+          "id": "YOUR_SMTP_CREDENTIAL_ID",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "command": "=cat > /grav_page/fullwidthcards.md << 'EOFMARKER'\n---\ntitle: AI & Ecology: Weekly Digest | {{ $today.toFormat('MMMM d, yyyy') }}\nbody_classes: modular\ncolumn: '1'\nshowtitle: '1'\ntitleh: '0'\ncentertext: '0'\nboxenabled: '0'\nboxbgcolor: '#ffffff'\nboxcolor: '#ffffff'\nboxcorners: '0'\n---\n\n{{ $json.output }} \nEOFMARKER"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        2368,
+        160
+      ],
+      "id": "47cbf819-4490-446e-93d7-51ec93d5ba7f",
+      "name": "Execute Command"
+    },
+    {
+      "parameters": {
+        "maxItems": 300
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        1616,
+        0
+      ],
+      "id": "3119b58f-1d60-4895-b4a2-49337791f1ac",
+      "name": "Limit"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "RSS Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Read": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send email": {
+      "main": [
+        []
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "130f2cff-d740-4035-a786-51a9c5d600d2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "YOUR_N8N_INSTANCE_ID"
+  },
+  "id": "2ULoNkfQxrU6IQxo",
+  "tags": []
+}
