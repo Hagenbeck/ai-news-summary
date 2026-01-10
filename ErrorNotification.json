@@ -1,0 +1,70 @@
+{
+  "name": "ErrorNotification",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2f459340-3912-4b57-85cd-d477a83fc985",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "fromEmail": "webmaster@peer-schlieker.de",
+        "toEmail": "peerschlieker@gmail.com",
+        "subject": "N8N-Error-Notification",
+        "emailFormat": "text",
+        "text": "=There was an error in n8n workflow  {{ $json.workflow.name }}\n\nError:\n{{ $json.execution.error.message }}\nStacktrace:\n{{ $json.execution.error.stack }}\non node {{ $json.execution.lastNodeExecuted }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "eb9340db-d3a8-4efa-babb-a197b883ce2a",
+      "name": "Send email",
+      "webhookId": "a14c0071-21ba-4fb8-b0b4-c726cf55fc13",
+      "credentials": {
+        "smtp": {
+          "id": "xikSnCW8A4RLkuUD",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "gZ9W3etCsYxexGbsfKsdH"
+  },
+  "versionId": "39790924-1725-41bb-bb65-aec617685c0f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e07210ae0b027922d078f6a0ac3b34fd0ff6b6b57dd877be194bd969a3282c78"
+  },
+  "id": "gZ9W3etCsYxexGbsfKsdH",
+  "tags": []
+}

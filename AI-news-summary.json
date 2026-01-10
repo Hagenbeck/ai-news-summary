@@ -6,10 +6,10 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        368,
+        0,
         0
       ],
-      "id": "d319fc9b-363a-42d3-b149-949eee7afd5a",
+      "id": "cf4d86f9-dfad-414a-92c2-e4b5d8ae35f0",
       "name": "When clicking ‘Execute workflow’"
     },
     {
@@ -20,10 +20,10 @@
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1.2,
       "position": [
-        960,
+        592,
         0
       ],
-      "id": "8e6f8189-f471-4502-a1a3-60a8e20bd25c",
+      "id": "de51ae82-8eb9-4f00-9b6b-5e79d8df8d07",
       "name": "RSS Read"
     },
     {
@@ -33,7 +33,7 @@
             {
               "id": "1427caa4-4b44-4b7b-9821-8c19279d915a",
               "name": "rss",
-              "value": "[  \"https://news.mit.edu/rss/topic/artificial-intelligence2\",\n  \"https://bair.berkeley.edu/blog/feed.xml\",\n  \"https://distill.pub/rss.xml\",\n  \"https://openai.com/news/rss.xml\",\n  \"https://www.technologyreview.com/topic/artificial-intelligence/feed\",\n\"https://www.oceanblogs.org/feed/\",\n\"https://www.geomar.de/en/feed/climate\",\n\"https://www.sciencedaily.com/rss/top/technology.xml\",\n\"https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml\",\n\"https://www.sciencedaily.com/rss/earth_climate.xml\",\n\"https://www.sciencedaily.com/rss/earth_climate/renewable_energy.xml\",\n\"https://www.sciencedaily.com/rss/plants_animals/dolphins_and_whales.xml\",\n\"https://www.sciencedaily.com/rss/plants_animals.xml\",\n\"https://www.sciencedaily.com/rss/computers_math.xml\",\n\"https://www.the-scientist.com/atom/technology/artificial-intelligence\"\n]",
+              "value": "[  \"https://news.mit.edu/rss/topic/artificial-intelligence2\",\n  \"https://bair.berkeley.edu/blog/feed.xml\",\n  \"https://distill.pub/rss.xml\",\n  \"https://openai.com/news/rss.xml\",\n  \"https://www.technologyreview.com/topic/artificial-intelligence/feed\",\n\"https://www.oceanblogs.org/feed/\",\n\"https://www.geomar.de/en/feed/climate\",\n\"https://www.sciencedaily.com/rss/top/technology.xml\",\n\"https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml\",\n\"https://www.sciencedaily.com/rss/earth_climate.xml\",\n\"https://www.sciencedaily.com/rss/earth_climate/renewable_energy.xml\",\n\"https://www.sciencedaily.com/rss/plants_animals/dolphins_and_whales.xml\",\n\"https://www.sciencedaily.com/rss/plants_animals.xml\",\n\"https://www.sciencedaily.com/rss/computers_math.xml\",\n\"https://www.the-scientist.com/atom/technology/artificial-intelligence\",\n\"http://kit.edu/pi.rss\",\n\"https://www.giga.de/feed/tech/\",\n\"https://www.heise.de/rss/heise-Rubrik-Wissen-atom.xml\",\n\"https://www.heise.de/rss/heise-Rubrik-IT-atom.xml\",\n\"https://www.heise.de/developer/feed.xml\",\n\"https://www.heise.de/ct/feed.xml\",\n\"https://www.heise.de/rss/heise.rdf\",\n\"https://www.chip.de/rss/chip_komplett.xml\"\n]",
               "type": "array"
             }
           ]
@@ -43,10 +43,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        576,
+        208,
         0
       ],
-      "id": "ecf09acb-22ae-4237-9988-1b7d543c964a",
+      "id": "564dbfa2-3a87-4d47-9b37-1317158c3527",
       "name": "Edit Fields"
     },
     {
@@ -57,10 +57,10 @@
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
       "position": [
-        784,
+        416,
         0
       ],
-      "id": "5f97c6b6-91fb-4888-968c-dedd6f8a7368",
+      "id": "3b6ae758-3fae-428a-bff2-c8e8e8466131",
       "name": "Split Out"
     },
     {
@@ -104,10 +104,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1168,
+        800,
         0
       ],
-      "id": "a504ad66-8b39-4653-97e2-bc611b8ed4db",
+      "id": "038cb6d1-a191-4bb6-a51b-2428ebde8777",
       "name": "Edit Fields1"
     },
     {
@@ -137,10 +137,10 @@
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.2,
       "position": [
-        1376,
+        1008,
         0
       ],
-      "id": "bc94ad01-7f85-4cf2-81d7-09af6c85d592",
+      "id": "3ee85616-4a29-4489-be16-1f230243e031",
       "name": "Filter"
     },
     {
@@ -151,28 +151,28 @@
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
       "position": [
-        1824,
+        1456,
         0
       ],
-      "id": "0023d6cc-b563-44f5-82ea-bb83fceba57d",
+      "id": "2b8abed3-7373-402d-9ea1-343e325180ad",
       "name": "Aggregate"
     },
     {
       "parameters": {
-        "model": "openai/gpt-5",
+        "model": "google/gemini-3-flash-preview",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
       "typeVersion": 1,
       "position": [
-        2032,
+        1664,
         192
       ],
-      "id": "2f4d77b6-b754-45d0-998d-b4dbbc844916",
+      "id": "8596c1bd-8fde-4db2-9ef8-bfff5184fd3b",
       "name": "OpenRouter Chat Model",
       "credentials": {
         "openRouterApi": {
-          "id": "YOUR_ID",
+          "id": "xJYaDUnnPyVAYSIh",
           "name": "OpenRouter account"
         }
       }
@@ -188,10 +188,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        2032,
+        1664,
         0
       ],
-      "id": "76909d28-1d1e-41a1-a35a-82d5d20f2e7f",
+      "id": "050f8387-95a5-45f3-995c-dc29c8c689b9",
       "name": "AI Agent"
     },
     {
@@ -205,31 +205,18 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        2368,
+        2000,
         0
       ],
-      "id": "38a7ad78-941b-4a01-9c10-5887ce7b055b",
+      "id": "f71daa48-a921-4e71-93e3-6fead75c757e",
       "name": "Send email",
       "webhookId": "4b1427cd-6f6d-4a26-a328-15111d183579",
       "credentials": {
         "smtp": {
-          "id": "YOUR ID",
+          "id": "xikSnCW8A4RLkuUD",
           "name": "SMTP account"
         }
       }
-    },
-    {
-      "parameters": {
-        "command": "=cat > /grav_page/fullwidthcards.md << 'EOFMARKER'\n---\ntitle: AI & Ecology: Weekly Digest | {{ $today.toFormat('MMMM d, yyyy') }}\nbody_classes: modular\ncolumn: '1'\nshowtitle: '1'\ntitleh: '0'\ncentertext: '0'\nboxenabled: '0'\nboxbgcolor: '#ffffff'\nboxcolor: '#ffffff'\nboxcorners: '0'\n---\n\n{{ $json.output }} \nEOFMARKER"
-      },
-      "type": "n8n-nodes-base.executeCommand",
-      "typeVersion": 1,
-      "position": [
-        2368,
-        160
-      ],
-      "id": "47cbf819-4490-446e-93d7-51ec93d5ba7f",
-      "name": "Execute Command"
     },
     {
       "parameters": {
@@ -238,11 +225,24 @@
       "type": "n8n-nodes-base.limit",
       "typeVersion": 1,
       "position": [
-        1616,
+        1248,
         0
       ],
-      "id": "3119b58f-1d60-4895-b4a2-49337791f1ac",
+      "id": "365ab3c5-3c8e-4ace-b86a-68833577b938",
       "name": "Limit"
+    },
+    {
+      "parameters": {
+        "command": "=cat > /grav_page/fullwidthcards.md << 'EOFMARKER'\n---\ntitle: AI & Ecology: Weekly Digest | {{ $today.toFormat('MMMM d, yyyy') }}\nbody_classes: modular\ncolumn: '1'\nshowtitle: '1'\ntitleh: '0'\ncentertext: '0'\nboxenabled: '0'\nboxbgcolor: '#ffffff'\nboxcolor: '#ffffff'\nboxcorners: '0'\n---\n\n{{ $json.output }} \nEOFMARKER"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        176
+      ],
+      "id": "f49bbb5c-a477-45e5-85a2-660b4cf1f3ba",
+      "name": "Execute Command"
     }
   ],
   "pinData": {},
@@ -351,11 +351,6 @@
         ]
       ]
     },
-    "Send email": {
-      "main": [
-        []
-      ]
-    },
     "Limit": {
       "main": [
         [
@@ -370,13 +365,17 @@
   },
   "active": false,
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "ERROR_WORKFLOW_ID"
   },
-  "versionId": "a38fd860-8899-4cf9-9310-9d7bc48b7e53",
+  "versionId": "f7830f6a-42b3-41a0-b072-ecb3e1072fcc",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "YOUR_INSTANCE_ID"
   },
-  "id": "2ULoNkfQxrU6IQxo",
+  "id": "jmTJrqNNpP5eI_OxRt-HB",
   "tags": []
 }
